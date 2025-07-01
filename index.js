@@ -35,17 +35,20 @@ async function run() {
     const parcelsCollection = client.db('parcelDB').collection('parcels')
 
 
-    app.get('/parcels', async (req, res) => {
-      const parcels = await parcelsCollection.find().toArray();
+    // app.get('/parcels', async (req, res) => {
+    //   const parcels = await parcelsCollection.find().toArray();
 
-      res.send(parcels)
-    });
+    //   res.send(parcels)
+    // });
 
     // parcels Api by email
+    
     app.get('/parcels', async (req, res) => {
       const userEmail = req.query.email;
 
-      const query = userEmail ? { created_by: userEmail } : {};
+      const query = userEmail ? {
+        created_by: userEmail
+      } : {};
 
       const options = {
         sort: {
