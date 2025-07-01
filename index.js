@@ -31,23 +31,44 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-     //collection
-        const parcelsCollection = client.db('parcelDB').collection('parcels')
+    //collection
+    const parcelsCollection = client.db('parcelDB').collection('parcels')
 
 
-        app.get('/parcels', async(req, res)=>{
-            const parcels = await parcelsCollection.find().toArray();
-            
-            res.send(parcels)
-        });
+    app.get('/parcels', async (req, res) => {
+      const parcels = await parcelsCollection.find().toArray();
 
-        app.post('/parcels', async(req, res)=>{
-            const newParcel = req.body;
-            const result = await parcelsCollection.insertOne(newParcel);
+      res.send(parcels)
+    });
 
-            res.send(result)
+    // parcels Api by email
+    app.get('/parcels', async (req, res) => {
+      const userEmail = req.query.email;
 
-        })
+      const query = userEmail ? { created_by: userEmail } : {};
+
+      const options = {
+        sort: {
+          creation_date: -1
+        }
+      }
+
+      const parcels = await parcelsCollection.find(query, options).toArray();
+
+      res.send(parcels)
+
+    })
+
+
+
+
+    app.post('/parcels', async (req, res) => {
+      const newParcel = req.body;
+      const result = await parcelsCollection.insertOne(newParcel);
+
+      res.send(result)
+
+    })
 
 
 
@@ -73,10 +94,10 @@ run().catch(console.dir);
 
 
 // sample route
-app.get('/', (req, res)=>{
-    res.send('Porfast Server is running')
+app.get('/', (req, res) => {
+  res.send('Porfast Server is running')
 });
 
-app.listen(port, ()=>{
-    console.log(`Server is listening on port ${port}`);
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
 })
