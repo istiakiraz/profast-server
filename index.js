@@ -41,8 +41,8 @@ async function run() {
     //   res.send(parcels)
     // });
 
+
     // parcels Api by email
-    
     app.get('/parcels', async (req, res) => {
       const userEmail = req.query.email;
 
@@ -61,6 +61,22 @@ async function run() {
       res.send(parcels)
 
     })
+
+    //parcel api by id 
+
+    app.get('/parcels/:id' , async( req, res) =>{
+
+      const id = req.params.id;
+
+      const query = {_id: new ObjectId(id)};
+
+      const result = await parcelsCollection.findOne(query);
+
+      res.send(result)
+
+    })
+
+
 
 
 
